@@ -14,14 +14,14 @@ describe('ObjectId', function () {
 
     it('creates an ObjectId from raw data', function () {
         $rawId = random_bytes(12);
-        $objectId = ObjectId::fromData($rawId);
+        $objectId = ObjectId::fromBinary($rawId);
         expect($objectId)->toBeInstanceOf(ObjectId::class);
         expect($objectId->toBinary())->toBe($rawId);
     });
 
     it('throws Invalid exception for invalid raw data', function () {
         foreach ([10, 14] as $length) {
-            expect(fn() => ObjectId::fromData(random_bytes($length)))->toThrow(
+            expect(fn() => ObjectId::fromBinary(random_bytes($length)))->toThrow(
                 Invalid::class,
             );
         }

@@ -54,7 +54,7 @@ class ObjectId
      * @return ObjectId
      * @throws Invalid if $rawData is not 12 bytes.
      */
-    public static function fromData(string $data): ObjectId
+    public static function fromBinary(string $data): ObjectId
     {
         return new self($data);
     }
@@ -71,7 +71,7 @@ class ObjectId
         if (!self::legal($string)) {
             throw new Invalid("'$string' is an invalid ObjectId.");
         }
-        return self::fromData(hex2bin($string));
+        return self::fromBinary(hex2bin($string));
     }
 
     /**
@@ -92,7 +92,7 @@ class ObjectId
             $data = pack('N', $timestamp) . "\x00\x00\x00\x00\x00\x00\x00\x00";
         }
 
-        return self::fromData($data);
+        return self::fromBinary($data);
     }
 
     /**

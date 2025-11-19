@@ -1,6 +1,7 @@
 # `SlimeSystems\ObjectId`
 
-A feature-packed ObjectId implementation for PHP.
+A feature-packed ObjectId implementation for PHP.  
+[![PHP Composer](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml/badge.svg)](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml)  
 
 ---
 

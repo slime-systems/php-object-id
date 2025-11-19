@@ -7,7 +7,7 @@ A feature-packed ObjectId implementation for PHP.
 ## Usage Guide
 
 `SlimeSystems\ObjectId` is a BSON-compatible identifier similar to MongoDB's `ObjectId`.
-It provides a 12-byte binary id based on the specification, along with handy utilities.
+It provides a 12-byte binary id based on [the specification](https://www.mongodb.com/docs/manual/reference/bson-types/#objectid), along with handy utilities.
 
 ### Creating ObjectIds
 

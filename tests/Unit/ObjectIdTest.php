@@ -124,4 +124,11 @@ describe('ObjectId', function () {
         $id2 = new ObjectId;
         expect((new Carbon($id1->toTime()))->lessThanOrEqualTo($id2->toTime()))->toBeTrue();
     });
+
+    it('persist PID part in the same process', function () {
+        $id1 = new ObjectId;
+        $id2 = new ObjectId;
+        expect($id1->equals($id2))->toBeFalse();
+        expect(substr($id1->toBinary(), 4, 5))->toBe(substr($id2->toBinary(), 4, 5));
+    });
 });

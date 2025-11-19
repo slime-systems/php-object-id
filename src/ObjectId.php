@@ -4,7 +4,6 @@ namespace SlimeSystems;
 
 use Carbon\Carbon;
 use DateTime;
-use Exception;
 use SlimeSystems\ObjectId\Exception\Invalid;
 use SlimeSystems\ObjectIdInternal\Generator;
 
@@ -35,9 +34,6 @@ class ObjectId
 
     /**
      * Constructor.
-     *
-     * @param string|null $rawData Optional 12-byte raw data. If null, a new ID is generated.
-     * @throws Invalid if $rawData is not 12 bytes.
      */
     public function __construct(?string $rawData = null)
     {
@@ -131,6 +127,26 @@ class ObjectId
     }
 
     /**
+     * Get the binary representation (12-byte string).
+     *
+     * @return string The object id as binary.
+     */
+    public function toBinary(): string
+    {
+        return $this->rawData;
+    }
+
+    /**
+     * Return the UTC time at which this ObjectId was generated.
+     *
+     * @return DateTime The time the id was generated.
+     */
+    public function toTime(): DateTime
+    {
+        return $this->generationTime();
+    }
+
+    /**
      * Check equality of the object id with another object.
      *
      * @param mixed $other The object to check against.
@@ -160,9 +176,8 @@ class ObjectId
      * Return the UTC time at which this ObjectId was generated.
      *
      * @return DateTime The time the id was generated.
-     * @throws Exception
      */
-    public function getGenerationTime(): DateTime
+    protected function generationTime(): DateTime
     {
         // Get the first 4 bytes (timestamp)
         $timestamp_bytes = substr($this->rawData, 0, 4);
@@ -183,12 +198,3 @@ class ObjectId
         return "SlimeSystems\\ObjectId('{$this->toString()}')";
     }
 }
-
-// To use this class:
-// try {
-//     $objectId = new BSON\ObjectId();
-//     echo $objectId->toString() . "\n";
-//     echo $objectId->getGenerationTime()->format(DateTime::ATOM) . "\n";
-// } catch (\Exception $e) {
-//     echo "Error: " . $e->getMessage();
-// }

@@ -34,17 +34,19 @@ class ObjectId
 
     /**
      * Constructor.
+     * @throws Invalid
      */
-    public function __construct(?string $rawData = null)
+    public function __construct($rawData = null)
     {
-        if ($rawData !== null) {
-            if (strlen($rawData) !== 12) {
-                throw new Invalid("Raw data must be 12 bytes for ObjectId.");
-            }
-            $this->rawData = $rawData;
-        } else {
+        if ($rawData === null) {
             $this->rawData = self::generator()->nextObjectId();
+            return;
         }
+        if (!is_string($rawData))
+            throw new Invalid("Raw data must be a string.");
+        if (strlen($rawData) !== 12)
+            throw new Invalid("Raw data must be 12 bytes for ObjectId.");
+        $this->rawData = $rawData;
     }
 
     /**
@@ -54,8 +56,10 @@ class ObjectId
      * @return ObjectId
      * @throws Invalid if $rawData is not 12 bytes.
      */
-    public static function fromBinary(string $data): ObjectId
+    public static function fromBinary($data): ObjectId
     {
+        if (!is_string($data))
+            throw new Invalid("The input must be a string.");
         return new self($data);
     }
 
@@ -66,11 +70,12 @@ class ObjectId
      * @return ObjectId
      * @throws Invalid If the provided string is invalid.
      */
-    public static function fromString(string $string): ObjectId
+    public static function fromString($string): ObjectId
     {
-        if (!self::legal($string)) {
-            throw new Invalid("'$string' is an invalid ObjectId.");
-        }
+        if (!is_string($string))
+            throw new Invalid("The input must be a string.");
+        if (!self::legal($string))
+            throw new Invalid("'$string' is not a 24-character hex string.");
         return self::fromBinary(hex2bin($string));
     }
 
@@ -82,9 +87,14 @@ class ObjectId
      * @return ObjectId The new object id.
      * @throws Invalid
      */
-    public static function fromTime(int|DateTime $time, bool $unique = true): ObjectId
+    public static function fromTime($time, bool $unique = true): ObjectId
     {
-        $timestamp = $time instanceof DateTime ? $time->getTimestamp() : (int)$time;
+        if ($time instanceof DateTime)
+            $timestamp = $time->getTimestamp();
+        elseif (is_integer($time))
+            $timestamp = $time;
+        else
+            throw new Invalid("The input must be a time.");
 
         if ($unique) {
             $data = self::generator()->nextObjectId($timestamp);

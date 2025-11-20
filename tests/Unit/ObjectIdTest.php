@@ -25,6 +25,11 @@ describe('ObjectId', function () {
                 Invalid::class,
             );
         }
+        foreach ([null, 1] as $specimen) {
+            expect(fn() => ObjectId::fromBinary($specimen))->toThrow(
+                Invalid::class,
+            );
+        }
     });
 
     it('creates an ObjectId from string', function () {
@@ -35,10 +40,12 @@ describe('ObjectId', function () {
         expect($objectId->toBinary())->toBe($rawId);
     });
 
-    it('throws Invalid exception in fromString for a non-hex string', function () {
-        expect(fn() => ObjectId::fromString('ダメ'))->toThrow(
-            Invalid::class,
-        );
+    it('throws Invalid exception in fromString for an invalid string', function () {
+        foreach ([null, 1, 'ダメ'] as $specimen) {
+            expect(fn() => ObjectId::fromString($specimen))->toThrow(
+                Invalid::class,
+            );
+        }
     });
 
     it('throws Invalid exception in fromString when the length is no good', function () {
@@ -63,6 +70,27 @@ describe('ObjectId', function () {
         expect($objectId)->toBeInstanceOf(ObjectId::class);
         expect($time->equalTo($objectId->toTime()))->toBeTrue();
         expect(substr($objectId->toString(), -16))->toBe(str_repeat('00', 8));
+    });
+
+    it('throws Invalid exception in fromTime for an invalid value', function () {
+        foreach ([null, 'ダメ'] as $specimen) {
+            expect(fn() => ObjectId::fromTime($specimen))->toThrow(
+                Invalid::class,
+            );
+        }
+    });
+
+    it('should allow timestamps to wrap over', function () {
+        foreach ([
+            [Carbon::createFromTimestamp(0x100000000), 0],
+            [Carbon::createFromTimestamp(-1), 0xffffffff],
+            [0x100000000, 0],
+            [-1, 0xffffffff],
+        ] as [$time, $expected]) {
+            $objectId = ObjectId::fromTime($time);
+            $embeddedTime = new Carbon($objectId->toTime());
+            expect($embeddedTime->getTimestamp())->toBe($expected);
+        }
     });
 
     it('returns the 24-char hex string via __toString()', function () {

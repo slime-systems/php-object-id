@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": ">=8.0",
-        "nesbot/carbon": "^3.10"
+        "nesbot/carbon": ">=3.8.4"
     },
     "require-dev": {
         "pestphp/pest": "^4.1"

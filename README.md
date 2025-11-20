@@ -1,9 +1,17 @@
 # `SlimeSystems\ObjectId`
 
-A feature-packed ObjectId implementation for PHP.  
-[![PHP Composer](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml/badge.svg)](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml)  
+A feature-packed ObjectId implementation for PHP.
+
+[![PHP Composer](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml/badge.svg)](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml)
+[![Packagist Version](https://img.shields.io/packagist/v/slime-systems/object-id)](https://packagist.org/packages/slime-systems/object-id)  
 
 ---
+
+## Installation
+
+~~~bash
+composer require slime-systems/object-id
+~~~
 
 ## Usage Guide
 

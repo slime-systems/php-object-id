@@ -3,6 +3,14 @@
     "description": "BSON's ObjectId for PHP",
     "type": "library",
     "license": "BSD-2-Clause",
+    "keywords": [
+        "BSON",
+        "ObjectId",
+        "MongoDB",
+        "UUID",
+        "bson-objectid",
+        "unique-identifier"
+    ],
     "scripts": {
         "test": "vendor/bin/pest"
     },

@@ -96,11 +96,10 @@ class ObjectId
         else
             throw new Invalid("The input must be a time.");
 
-        if ($unique) {
+        if ($unique)
             $data = self::generator()->nextObjectId($timestamp);
-        } else {
+        else
             $data = pack('N', $timestamp) . "\x00\x00\x00\x00\x00\x00\x00\x00";
-        }
 
         return self::fromBinary($data);
     }
@@ -164,9 +163,8 @@ class ObjectId
      */
     public function equals($other): bool
     {
-        if (!($other instanceof ObjectId)) {
+        if (!($other instanceof ObjectId))
             return false;
-        }
         return $this->rawData === $other->rawData;
     }
 

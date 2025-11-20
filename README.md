@@ -22,7 +22,7 @@ It provides a 12-byte binary id based on [the specification](https://www.mongodb
 
 #### Create a new ObjectId
 
-When no data is provided, a new unique identifier is generated.
+Generate a new unique identifier
 
 ~~~php
 use SlimeSystems\ObjectId;
@@ -40,7 +40,7 @@ Accepts a binary string of exactly 12 bytes.
 $id = ObjectId::fromBinary($raw);
 ~~~
 
-Invalid lengths (anything other than 12 bytes) will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+Invalid binary will throw `SlimeSystems\ObjectId\Exception\Invalid`.
 
 #### From a hex string
 
@@ -50,7 +50,7 @@ Accepts a 24-character hexadecimal string.
 $id = ObjectId::fromString($hex);
 ~~~
 
-Invalid hex or invalid lengths will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+Invalid hex string will throw `SlimeSystems\ObjectId\Exception\Invalid`.
 
 #### From a timestamp
 
@@ -62,6 +62,8 @@ $id = ObjectId::fromTime($dateTime);
 $id = ObjectId::fromTime($timestamp);
 ~~~
 
+Invalid time will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+
 #### ObjectIds for time comparison
 
 If you need an ObjectId for time comparisons, you can add `unique: false` to zeroes the last 8 bytes out:
@@ -70,6 +72,8 @@ If you need an ObjectId for time comparisons, you can add `unique: false` to zer
 $id = ObjectId::fromTime($time, unique: false);
 // Last 8 bytes of the hex string will be "0000000000000000"
 ~~~
+
+This also do not increase the internal counter for generating a unique identifier.  
 
 ### Conversions
 
@@ -82,7 +86,7 @@ $id->toString() // return 24-digit hexadecimal string
 #### Convert to binary
 
 ~~~php
-$id->toBinary() // return 12 byte binary string
+$id->toBinary() // return 12-byte binary string
 ~~~
 
 #### Extracting the time
@@ -98,7 +102,7 @@ $time = $id->toTime();
 
 #### Human-readable inspection
 
-`inspect()` returns a more detailed string containing the hex form and extra info.
+`inspect()` returns a readable string containing the hex representation.
 
 ~~~php
 $id->inspect() // return "SlimeSystems\ObjectId(<hexadecimal representation>)"

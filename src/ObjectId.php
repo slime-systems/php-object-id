@@ -6,6 +6,13 @@ use Carbon\Carbon;
 use DateTime;
 use SlimeSystems\ObjectId\Exception\Invalid;
 use SlimeSystems\ObjectIdInternal\Generator;
+use function bin2hex;
+use function hex2bin;
+use function is_string;
+use function preg_match;
+use function strlen;
+use function substr;
+use function unpack;
 
 /**
  * Represents BSON ObjectId data (12 bytes).

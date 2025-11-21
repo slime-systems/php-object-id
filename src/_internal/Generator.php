@@ -2,6 +2,12 @@
 
 namespace SlimeSystems\ObjectIdInternal;
 
+use function pack;
+use function random_bytes;
+use function random_int;
+use function substr;
+use function time;
+
 /**
  * @internal The class that encapsulates the behaviour of actually generating each
  * part of the ObjectId.
@@ -39,7 +45,7 @@ class Generator
     public function nextObjectId(?int $time = null): string
     {
         $time ??= time();
-        $count = $this->counter = ($this->counter + 1) & self::COUNTER_MAX;
+        $count = $this->counter = $this->counter + 1 & self::COUNTER_MAX;
 
         return $this->generate($time, $count);
     }
@@ -66,6 +72,6 @@ class Generator
 
         // Concatenate the pieces:
         // Time (4) | PID (5) | Counter (3)
-        return $timeBytes . $this->processId . $counter_bytes;
+        return "{$timeBytes}{$this->processId}{$counter_bytes}";
     }
 }

@@ -1,15 +1,20 @@
 {
     "name": "slime-systems/object-id",
-    "description": "BSON's ObjectId for PHP",
+    "description": "A feature-packed, BSON-compatible ObjectId implementation for PHP, similar to MongoDB's ObjectId, providing unique ID generation, conversions, and comparison utilities.",
     "type": "library",
     "license": "BSD-2-Clause",
     "keywords": [
-        "BSON",
-        "ObjectId",
-        "MongoDB",
-        "UUID",
-        "bson-objectid",
-        "unique-identifier"
+        "objectid",
+        "object-id",
+        "id",
+        "unique-id",
+        "unique-identifier",
+        "bson",
+        "mongodb",
+        "timestamp",
+        "identifier",
+        "generation",
+        "sortable-id"
     ],
     "scripts": {
         "test": "vendor/bin/pest"

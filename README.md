@@ -1,4 +1,4 @@
-# `SlimeSystems\ObjectId`
+# Object ID
 
 A feature-packed ObjectId implementation for PHP.
 
@@ -151,6 +151,10 @@ or if you have containerd:
 ~~~bash
 make test
 ~~~
+
+## Headup
+
+If you are using Laravel or Eloquent, you may interested in [SlimeSystems\EloquentObjectId](https://github.com/slime-systems/eloquent-object-id).
 
 ## License
 

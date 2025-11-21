@@ -1,161 +1,150 @@
 # Object ID
 
-A feature-packed ObjectId implementation for PHP.
+A feature-packed, standalone **ObjectId** implementation for PHP.
 
-[![PHP Composer](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml/badge.svg)](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml)
-[![Packagist Version](https://img.shields.io/packagist/v/slime-systems/object-id)](https://packagist.org/packages/slime-systems/object-id)  
+[![Latest Version](https://img.shields.io/packagist/v/slime-systems/object-id)](https://packagist.org/packages/slime-systems/object-id)
+[![Tests](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml/badge.svg)](https://github.com/slime-systems/php-object-id/actions/workflows/php.yml)
 
 ---
 
-## Installation
+**SlimeSystems\ObjectId** provides a BSON-compatible identifier generator and utility class, fully compliant with the [MongoDB ObjectId specification](https://www.mongodb.com/docs/manual/reference/bson-types/#objectid).
 
-~~~bash
+It is lightweight, requires no external extensions (like `mongodb`), and is perfect for generating sortable, unique identifiers in any PHP application.
+
+## 🚀 Installation
+
+Install via Composer:
+
+```bash
 composer require slime-systems/object-id
-~~~
+```
 
-## Usage Guide
+## ⚡ Quick Start
 
-`SlimeSystems\ObjectId` is a BSON-compatible identifier similar to MongoDB's `ObjectId`.
-It provides a 12-byte binary id based on [the specification](https://www.mongodb.com/docs/manual/reference/bson-types/#objectid), along with handy utilities.
+```php
+use SlimeSystems\ObjectId;
+
+// Generate a new unique ID
+$id = new ObjectId();
+
+echo $id; 
+// Output: 507f1f77bcf86cd799439011
+
+// Get the generation time
+$timestamp = $id->toTime(); 
+// Returns a DateTime object
+```
+
+## 📖 Usage Guide
 
 ### Creating ObjectIds
 
-#### Create a new ObjectId
+#### Generate a New ID
+Create a fresh, unique 12-byte identifier.
 
-Generate a new unique identifier
-
-~~~php
-use SlimeSystems\ObjectId;
-
+```php
 $id = new ObjectId;
+```
 
-var_dump($id->toString()); // 24-char hex string
-~~~
+#### From Hex String
+Restore an ObjectId from its 24-character hexadecimal representation.
 
-#### From raw binary data
+```php
+$id = ObjectId::fromString('507f1f77bcf86cd799439011');
+```
 
-Accepts a binary string of exactly 12 bytes.
+#### From Binary Data
+Create from a raw 12-byte binary string (e.g., stored in a database).
 
-~~~php
-$id = ObjectId::fromBinary($raw);
-~~~
+```php
+$id = ObjectId::fromBinary($binaryData);
+```
 
-Invalid binary will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+#### From Timestamp
+Generate an ID based on a specific time. useful for time-based sorting or filtering.
 
-#### From a hex string
+```php
+// From a DateTime object
+$id = ObjectId::fromTime(new DateTime('2025-01-01'));
 
-Accepts a 24-character hexadecimal string.
+// From a Unix timestamp
+$id = ObjectId::fromTime(1735689600);
+```
 
-~~~php
-$id = ObjectId::fromString($hex);
-~~~
+**Note:** By default, `fromTime` generates a unique ID (randomizing the remaining bytes). If you need a "zeroed" ID for range queries (e.g., "find all IDs created after X"), pass `unique: false`:
 
-Invalid hex string will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+```php
+$startId = ObjectId::fromTime($timestamp, unique: false);
+// Last 8 bytes will be 0000000000000000
+```
 
-#### From a timestamp
-
-You can generate an ObjectId from either a DateTime object or a Unix timestamp.
-
-~~~php
-$id = ObjectId::fromTime($dateTime);
-// or
-$id = ObjectId::fromTime($timestamp);
-~~~
-
-Invalid time will throw `SlimeSystems\ObjectId\Exception\Invalid`.
-
-#### ObjectIds for time comparison
-
-If you need an ObjectId for time comparisons, you can add `unique: false` to zeroes the last 8 bytes out:
-
-~~~php
-$id = ObjectId::fromTime($time, unique: false);
-// Last 8 bytes of the hex string will be "0000000000000000"
-~~~
-
-This also do not increase the internal counter for generating a unique identifier.  
+Invalid input to the `ObjectId::from...` series will throw `SlimeSystems\ObjectId\Exception\Invalid`.
+They are safe for handling untrusted variables, assuming that this exception is the expected behavior.
 
 ### Conversions
 
-#### Convert to string
-
-~~~php
-$id->toString() // return 24-digit hexadecimal string
-~~~
-
-#### Convert to binary
-
-~~~php
-$id->toBinary() // return 12-byte binary string
-~~~
-
-#### Extracting the time
-
-You can retrieve the timestamp embedded in the ObjectId:
-
-~~~php
+```php
 $id = new ObjectId;
 
-// Returns a DateTime object
-$time = $id->toTime();
-~~~
+// To Hex String (24 chars)
+$hex = $id->toString(); 
+// or simply: (string) $id
 
-#### Human-readable inspection
+// To Binary (12 bytes)
+$bin = $id->toBinary();
 
-`inspect()` returns a readable string containing the hex representation.
+// To DateTime
+$date = $id->toTime();
+```
 
-~~~php
-$id->inspect() // return "SlimeSystems\ObjectId(<hexadecimal representation>)"
-~~~
+### Comparisons
 
-### Comparison
+#### Equality Check
+Check if two ObjectIds represent the same value.
 
-#### Equality
+```php
+if ($id1->equals($id2)) {
+    // ...
+}
+```
 
-~~~php
-$id->equals($id); // true
-~~~
+#### Sorting
+Compare two IDs lexicographically (useful for sorting).
 
-Comparing to a non-ObjectId always returns `false`.
+```php
+$result = $id1->compareTo($id2);
+// -1 if $id1 < $id2
+//  0 if $id1 == $id2
+//  1 if $id1 > $id2
+```
 
-#### Lexicographic comparison
+### Debugging
+Get a readable inspection string.
 
-`compareTo()` works similarly to `strcmp()`:
+```php
+echo $id->inspect();
+// SlimeSystems\ObjectId(507f1f77bcf86cd799439011)
+```
 
-~~~php
-$id1->compareTo($id2); // -1 (smaller)
-$id2->compareTo($id1); // 1  (larger)
-$id1->compareTo($id1); // 0  (equal)
-~~~
+## 🔌 Framework Integration
 
-## `ObjectId` provides:
+### Laravel / Eloquent
+Using Laravel? Check out **[SlimeSystems\EloquentObjectId](https://github.com/slime-systems/eloquent-object-id)** for seamless integration with Eloquent models.
 
-* Unique ID generation
-* Creation from raw data, hex strings, or timestamps
-* Deterministic time-based IDs
-* String/binary conversion
-* Timestamp extraction
-* Comparison helpers (`equals()`, `compareTo()`)
-* Human-readable inspection
+## 🧪 Testing
 
-This makes it a flexible utility for systems that need compact, sortable, BSON-compatible identifiers.
+Run the test suite with:
 
-## Tests
-
-~~~bash
+```bash
 composer run test
-~~~
+```
 
-or if you have containerd:
+Or if you have containerd:
 
-~~~bash
+```bash
 make test
-~~~
+```
 
-## Headup
+## 📄 License
 
-If you are using Laravel or Eloquent, you may interested in [SlimeSystems\EloquentObjectId](https://github.com/slime-systems/eloquent-object-id).
-
-## License
-
-[BSD 2-Clause License](./LICENSE.md)
+This project is licensed under the [BSD 2-Clause License](./LICENSE.md).
